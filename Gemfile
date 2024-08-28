@@ -71,3 +71,6 @@ gem 'dotenv-rails' # To manage environment variables
 gem 'omniauth-github'
 gem "omniauth-rails_csrf_protection"
 gem 'pry'
+gem 'graphql'
+gem 'graphql-client'
+gem 'rest-client'

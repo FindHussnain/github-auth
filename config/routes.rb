@@ -4,6 +4,8 @@ Rails.application.routes.draw do
   get "/auth/:provider/callback", to: "github_sessions#create"
   get "/auth/failure", to: "github_sessions#failure"
   delete "/logout", to: "github_sessions#destroy"
+  get 'github/import_page', to: 'github#import_page'
+  post 'github/import', to: 'github#import'
 
   # Reveal health status on /up that returns 200 if the app boots with no exceptions, otherwise 500.
   # Can be used by load balancers and uptime monitors to verify that the app is live.

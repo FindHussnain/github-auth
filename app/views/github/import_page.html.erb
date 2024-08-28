@@ -1,0 +1,19 @@
+<h1>Imported GitHub Repositories and Issues</h1>
+
+<h2>Repositories</h2>
+<ul>
+  <% if @repositories.present? %>
+    <% @repositories.each do |repo| %>
+      <li>
+        <strong><%= repo.name %></strong> - <%= repo.description %>
+        <ul>
+          <% @issues.where(github_repository_id: repo.id).each do |issue| %>
+            <li><strong>Issue:</strong> <%= issue.title %> - <%= issue.state %></li>
+          <% end %>
+        </ul>
+      </li>
+    <% end %>
+  <% end %>
+</ul>
+
+<%= button_to "Re-import from GitHub", github_import_path, method: :post, class: "btn btn-primary" %>
