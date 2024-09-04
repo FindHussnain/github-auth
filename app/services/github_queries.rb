@@ -13,4 +13,20 @@ module GithubQueries
       }
     }
   GRAPHQL
+
+  ISSUES_QUERY = <<-GRAPHQL
+    query($repositoryName: String!, $owner: String!) {
+      repository(name: $repositoryName, owner: $owner) {
+        issues(first: 100) {
+          nodes {
+            title
+            body
+            state
+            url
+            number
+          }
+        }
+      }
+    }
+  GRAPHQL
 end

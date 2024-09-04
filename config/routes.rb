@@ -6,6 +6,7 @@ Rails.application.routes.draw do
   delete "/logout", to: "github_sessions#destroy"
   get 'github/import_page', to: 'github#import_page'
   post 'github/import', to: 'github#import'
+  post 'github/fetch_issues', to: 'github#fetch_issues' # New route for selecting a repository
 
   # Reveal health status on /up that returns 200 if the app boots with no exceptions, otherwise 500.
   # Can be used by load balancers and uptime monitors to verify that the app is live.

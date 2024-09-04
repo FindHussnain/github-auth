@@ -23,8 +23,8 @@
       <div class="modal-body bg-color">
         <div id="alert-auth"></div>
         <div class="text-center mt-4">
-           <% if github_current_user %>
-               <%= button_to "Authorized", "/auth/github", class: "btn btn-primary btn-lg auth-button", data: { turbo: false }, disabled: true %>
+          <% if github_current_user %>
+              <%= button_to "Authorized", "/auth/github", class: "btn btn-primary btn-lg auth-button", data: { turbo: false }, disabled: true %>
           <% else %>
               <%= button_to "Authorize", "/auth/github", class: "btn btn-primary btn-lg auth-button", data: { turbo: false } %>
           <% end %>
