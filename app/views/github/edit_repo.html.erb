@@ -1,0 +1,43 @@
+<div class="row">
+  <div class="col-md-3"></div>
+  <div class="col-md-6 text-center mt-4 centered-column-container div-height">
+  </div>
+  <div class="col-md-3"></div>
+</div>
+
+<!-- Repositories Modal -->
+<div class="modal fade show" id="repositoriesModal" tabindex="-1" role="dialog" aria-labelledby="repositoriesModalLabel" aria-hidden="true" style="display: block;">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content" style="background-color: #2b2f35; border: 1px solid #565c67; box-shadow: 0 4px 8px rgba(0,0,0,0.15);">
+      <div class="modal-header bg-color text-white">
+        <h5 class="modal-title" id="repositoriesModalLabel">
+            Create a New Repo
+        </h5>
+        <button type="button" class="close" onclick="window.location.href='<%= root_path %>'" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body bg-color">
+        <!-- Flash alerts inside the modal -->
+        <%= render '/shared/alerts' %>
+
+        <div id="alert-auth"></div>
+        <div class="text-center">
+          <%= form_with model: @repository, url: github_create_repo_path(@repository), method: :post, local: true do |f| %>
+            <!-- Flex container to align label and input on the same line -->
+            <div class="form-group d-flex justify-content-center align-items-center">
+              <label for="repository_name" style="color:white; margin-right: 10px;">Title:</label>
+              <!-- Pre-fill with repository name if editing -->
+              <%= f.text_field :name, id: "repository_name", class: "form-control", required: true, value: @repository.name, style: 'width: 60%;' %>
+            </div>
+
+            <div class="d-flex justify-content-between mt-4 mb-4">
+              <%= link_to 'Cancel', github_import_page_path, class: 'btn btn-primary btn-lg', style: 'margin-right: 10px; background-color: #9929BD; border-color: #9929BD' %>
+              <%= f.submit 'Next', class: 'btn btn-primary btn-lg', style: 'background-color: #9929BD; border-color: #9929BD' %>
+            </div>
+          <% end %>
+        </div>
+              </div>
+    </div>
+  </div>
+</div>

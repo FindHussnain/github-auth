@@ -1,0 +1,68 @@
+<!-- Include your custom JavaScript file -->
+<%= javascript_include_tag 'codegiant_users_page' %>
+<!-- Include your custom JavaScript file -->
+<%= javascript_include_tag 'edit_importing_project' %>
+<div class="row">
+  <div class="col-md-3"></div>
+  <div class="col-md-6 text-center mt-4 centered-column-container div-height">
+  </div>
+  <div class="col-md-3"></div>
+</div>
+
+<div class="row">
+  <div class="col-md-3"></div>
+  <div class="col-md-6 text-center mt-4 centered-column-container"></div>
+  <div class="col-md-3"></div>
+</div>
+
+<!-- Modal for Users Mapping -->
+<div class="modal fade show" id="usersMappingModal" tabindex="-1" role="dialog" aria-labelledby="usersMappingModalLabel" aria-hidden="true" style="display: block;">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content" style="background-color: #2b2f35; border: 1px solid #565c67; box-shadow: 0 4px 8px rgba(0,0,0,0.15);">
+      <div class="modal-header bg-color text-white">
+        <h5 class="modal-title" id="usersMappingModalLabel">Users Mapping</h5>
+        <button type="button" class="close" onclick="window.location.href='<%= root_path %>'" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+
+      <div class="modal-body bg-color">
+        <%= form_tag update_github_issue_user_path, method: :post, id: 'userMappingForm' do %>
+          <%= hidden_field_tag :authenticity_token, form_authenticity_token %>
+          <%= hidden_field_tag :id, params[:project_id] %>
+
+          <% @githug_users.each_with_index do |user, index| %>
+            <div class="row mb-2 mt-4">
+              <!-- GitHub User Selection -->
+              <div class="col">
+                <select name="github_user_ids[]" class="form-control">
+                  <option value="<%= user.id %>"><%= user.username %></option>
+                </select>
+              </div>
+
+              <!-- CodeGiant User Selection -->
+              <div class="col">
+                <select name="code_giant_user_ids[]" class="form-control">
+                  <option value="">Unassigned</option>
+                  <% @codegiant_users.each do |cg_user| %>
+                    <option value="<%= cg_user.id %>"><%= cg_user.name %></option>
+                  <% end %>
+                </select>
+              </div>
+            </div>
+          <% end %>
+
+          <!-- Note section -->
+          <p style="color: orange" class="mt-4"><i class="fas fa-exclamation-triangle"></i><b> Note:</b> If you select a user who is not in the selected project, their issues will not be mapped.</p>
+        <% end %>
+      </div>
+
+      <!-- Modal Footer -->
+      <div class="modal-footer">
+        <%= link_to 'Cancel', root_path, class: 'btn btn-primary', style: 'background-color: #9929BD; border-color: #9929BD;' %>
+        <%= render 'shared/alerts' %>
+        <button type="button" id="submitFormButton" class="btn btn-primary" style="background-color: #9929BD; border-color: #9929BD;">Done</button>
+      </div>
+    </div>
+  </div>
+</div>

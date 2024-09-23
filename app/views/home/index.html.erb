@@ -30,7 +30,7 @@
           <% end %>
           <div class="mt-4 mb-4 space-between-container">
             <button id="cancel-btn" class="btn btn-primary btn-lg cancel-button" <% if github_current_user %> <% else %>disabled<% end %>>Cancel</button>
-            <%= button_to 'Next', github_import_path, id: 'next-button', class: 'btn btn-primary btn-lg next-button' %>
+            <%= button_to 'Next', github_import_repos_path, id: 'next-button', class: 'btn btn-primary btn-lg next-button' %>
           </div>
         </div>
       </div>

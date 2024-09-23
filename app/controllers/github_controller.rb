@@ -3,7 +3,7 @@ class GithubController < ApplicationController
     @repositories = github_current_user&.github_repositories
   end
 
-  def import
+  def import_repos
     unless github_current_user
       redirect_to root_path, alert: "Authenticate first to continue."
       return
@@ -21,6 +21,10 @@ class GithubController < ApplicationController
           repo.description = repo_data['description']
           repo.url = repo_data['url']
         end
+        GithubProject.find_or_create_by!(name: repo_data['name'], github_auth_user: github_current_user) do |project|
+          project.prefix = ''
+        end
+        FetchAssigneesJob.perform_now(repo.id, github_current_user.id)
       end
 
       redirect_to github_import_page_path, notice: "Repositories and Issues Imported!"
@@ -31,33 +35,40 @@ class GithubController < ApplicationController
 
   def fetch_issues
     repo = GithubRepository.find(params[:repository_id])
-    client = GithubClient.new(github_current_user.access_token)
 
-    issues_response = client.execute_query(
-      GithubQueries::ISSUES_QUERY,
-      repositoryName: repo.name,
-      owner: github_current_user.username
+    FetchIssuesJob.perform_later(repo.id, github_current_user.id) # Run in background
+    redirect_to github_edit_repo_path(repo), notice: "Fetching issues for repository #{repo.name}. This may take a few minutes."
+  end
+
+  def edit_repo
+    @repository = GithubRepository.find(params[:id])
+  end
+
+  def create_repo
+    repository = GithubRepository.find_by(id: params[:id]) # This fetches the existing repository in your system
+    token = ENV['TOKEN']
+    service = GraphqlMutationService.new(token)
+
+    # Use the name from the form (user-provided) instead of the stored repository name
+    user_provided_name = params[:github_repository][:name]
+
+    response = service.create_repository(
+      workspace_id: "7489",
+      title: user_provided_name, # Use the name from the form input here
+      description: repository.description, # You can still use other attributes from the existing repository
+      import_url: repository.url,
+      import_url_username: github_current_user.username
     )
 
-    if issues_response && issues_response['data']
-      issues = issues_response&.dig('data', 'repository', 'issues', 'nodes')
-
-      if issues.present?
-        issues.each do |issue_data|
-          repo.github_issues.find_or_create_by!(
-            number: issue_data['number']
-          ) do |issue|
-            issue.title = issue_data['title']
-            issue.body = issue_data['body']
-            issue.state = issue_data['state']
-            issue.html_url = issue_data['url']
-          end
-        end
-      else
-        Rails.logger.info "No issues found for repository: #{repo.name}"
-      end
+    # Handle response or errors
+    if response["errors"]
+      flash[:error] = "Error creating repository: #{response['errors']}"
+      redirect_to root_path
     else
-      Rails.logger.error "Failed to fetch issues for repository: #{repo.name}"
+      flash[:notice] = "Repository created successfully!"
+      FetchCodegiantUsersJob.perform_now()
+      redirect_to edit_importing_project_path(repository.name)
     end
+
   end
 end

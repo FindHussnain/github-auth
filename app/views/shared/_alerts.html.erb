@@ -5,3 +5,18 @@
     </div>
   <% end %>
 </div>
+
+<script>
+  document.addEventListener("DOMContentLoaded", function() {
+    const flashMessage = document.getElementById('alert-2');
+    if (flashMessage) {
+      // Set a timeout to fade out after 5 seconds
+      setTimeout(function() {
+        flashMessage.classList.remove('show'); // Bootstrap's show class is responsible for keeping it visible
+        setTimeout(function() {
+          flashMessage.style.display = 'none'; // Completely hide the element after fading
+        }, 150); // Wait for the fade-out transition
+      }, 4000); // 5 seconds before starting the fade out
+    }
+  });
+</script>

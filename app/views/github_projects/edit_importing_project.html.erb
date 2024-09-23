@@ -1,0 +1,40 @@
+<!-- Include your custom JavaScript file -->
+<%= javascript_include_tag 'edit_importing_project' %>
+<div class="row">
+  <div class="col-md-3"></div>
+  <div class="col-md-6 text-center mt-4 centered-column-container div-height">
+  </div>
+  <div class="col-md-3"></div>
+</div>
+
+<!-- Modal for Project Importing -->
+<div class="modal fade show" id="importingProjectModal" tabindex="-1" role="dialog" aria-labelledby="importingProjectModalLabel" aria-hidden="true" style="display: block;">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content" style="background-color: #2b2f35; border: 1px solid #565c67; box-shadow: 0 4px 8px rgba(0,0,0,0.15);">
+      <div class="modal-header bg-color text-white">
+        <h5 class="modal-title" id="importingProjectModalLabel">Project <%= @project.name %> Importing</h5>
+        <button type="button" class="close" onclick="window.location.href='<%= root_path %>'" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+
+      <div class="modal-body bg-color">
+        <%= form_with(model: @project, url: update_importing_project_path(@project.name), local: true) do |form| %>
+          <!-- Use project_name instead of project_id -->
+          <%= form.hidden_field :project_name, value: @project.name %>
+
+          <div class="form-group">
+            <%= form.label :prefix, "Prefix", class: "text-white" %>
+            <%= form.text_field :prefix, class: "form-control restricted-input prefix-field", required: true %>
+          </div>
+
+          <div class="d-flex justify-content-between mt-4 mb-4">
+            <button type="button" onclick="location.href='<%= root_path %>'" class="btn btn-primary btn-lg" style="background-color: #9929BD; border-color: #9929BD">Cancel</button>
+            <%= render 'shared/alerts' %>
+            <%= form.submit 'Next', class: 'btn btn-success btn-lg', style: "background-color: #9929BD; border-color: #9929BD;" %>
+          </div>
+        <% end %>
+      </div>
+    </div>
+  </div>
+</div>
